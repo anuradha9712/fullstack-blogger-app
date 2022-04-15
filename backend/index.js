@@ -92,6 +92,13 @@ app.post('/info/add', (req, res) => {
 	res.json(list);
 });
 
+// define middleware functions that are only called if no route handles the HTTP request.
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' })
+}
+
+app.use(unknownEndpoint);
+
 app.listen(PORT, () => {
 	console.log(`server is running at port ${PORT}`);
 });
