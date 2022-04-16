@@ -1,6 +1,8 @@
+require('dotenv').config()
 const express = require('express');
 const app = express();
-const PORT = 3001;
+const PORT = process.env.PORT;
+const mongoInstance = require('./models/record');
 
 const data = [
 	{
@@ -33,7 +35,9 @@ app.get('/', (req, res) => {
 
 // Send JSON data in response
 app.get('/info/person', (req, res) => {
-	res.json(data);
+	mongoInstance.find({}).then(result => {
+		res.json(result);
+	});
 });
 
 // Send html in response
@@ -50,12 +54,7 @@ app.get('/info', (req, res) => {
 // We can define parameters for routes in express by using the colon syntax:
 app.get('/info/:id', (req, res) => {
 	const id = Number(req.params.id);
-	const list = data.find(item => item.id == id);
-	if (list) {
-		res.json(list);
-	} else {
-		res.status(404).end();
-	}
+	mongoInstance.findById(id).then(result=> res.json(result));
 });
 
 // ================= DELETE REQUESTS ====================
@@ -81,15 +80,15 @@ app.post('/info/add', (req, res) => {
 			error: 'name missing'
 		})
 	}
-	const record = {
-		name: body.name,
-		number: body.number,
-		id: body.id,
-	}
 
-	const list = data.concat(record)
-	console.log('result', list);
-	res.json(list);
+	const record = new mongoInstance({
+    name: body.name,
+    number: body.number
+  });
+
+  record.save().then(result => {
+    res.json(result);
+  });
 });
 
 // define middleware functions that are only called if no route handles the HTTP request.
