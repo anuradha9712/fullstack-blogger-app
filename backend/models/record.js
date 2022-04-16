@@ -15,7 +15,11 @@ mongoose.connect(url)
   })
 
 const Schema = new mongoose.Schema({
-  name: String,
+  name: {
+    type: String,
+    required: true,
+    minlength: 5
+  },
   number: Number,
 });
 

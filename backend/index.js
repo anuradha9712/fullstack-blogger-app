@@ -77,7 +77,7 @@ app.delete('/info/remove/:id', (req, res, next) => {
 // and then attaches it to the body property of the request object before the route handler is called.
 app.use(express.json());
 
-app.post('/info/add', (req, res) => {
+app.post('/info/add', (req, res, next) => {
 	const body = req.body;
 	console.log('body', body);
 	if (!body.name) {
@@ -91,26 +91,28 @@ app.post('/info/add', (req, res) => {
 		number: body.number
 	});
 
-	record.save().then(result => {
-		res.json(result);
-	});
+	record.save()
+		.then(result => {
+			res.json(result)
+		})
+		.catch(error => next(error))
 });
 
 // ================== PUT REQUESTS ======================
 app.put('/info/update/:id', (req, res, next) => {
-  const body = req.body
+	const body = req.body
 
-  const record = {
-    name: body.name,
-    number: body.number,
-  }
+	const record = {
+		name: body.name,
+		number: body.number,
+	}
 
 	// We added the optional { new: true } parameter, which will cause our event handler to be called with the new modified document instead of the original.
-  mongoInstance.findByIdAndUpdate(req.params.id, record, { new: true })
-    .then(updatedRecord => {
-      res.json(updatedRecord)
-    })
-    .catch(error => next(error))
+	mongoInstance.findByIdAndUpdate(req.params.id, record, { new: true })
+		.then(updatedRecord => {
+			res.json(updatedRecord)
+		})
+		.catch(error => next(error))
 })
 
 // define middleware functions that are only called if no route handles the HTTP request.
@@ -125,8 +127,9 @@ const errorHandler = (error, request, response, next) => {
 
 	if (error.name === 'CastError') {
 		return response.status(400).send({ error: 'malformatted id' })
+	} else if (error.name === 'ValidationError') {
+		return response.status(400).json({ error: error.message })
 	}
-
 	next(error);
 }
 
