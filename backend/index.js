@@ -52,18 +52,23 @@ app.get('/info', (req, res) => {
 
 // Send information for particular data entry
 // We can define parameters for routes in express by using the colon syntax:
-app.get('/info/:id', (req, res) => {
+app.get('/info/:id', (req, res, next) => {
 	const id = Number(req.params.id);
-	mongoInstance.findById(id).then(result=> res.json(result));
+	mongoInstance.findById(id)
+		.then(result => res.json(result))
+		.catch(error => next(error));
 });
 
 // ================= DELETE REQUESTS ====================
-app.delete('/info/remove/:id', (req, res) => {
+app.delete('/info/remove/:id', (req, res, next) => {
 	const id = Number(req.params.id);
-	const list = data.filter(item => item.id !== id);
-	console.log('list', list);
-	// 204 (No Content): The server has fulfilled the request but does not need to return an entity-body,
-	res.status(204).end();
+
+	mongoInstance.findByIdAndRemove(req.params.id)
+		.then(result => {
+			// 204 (No Content): The server has fulfilled the request but does not need to return an entity-body,
+			res.status(204).end()
+		})
+		.catch(error => next(error))
 });
 
 // ================= POST REQUESTS ======================
@@ -82,21 +87,51 @@ app.post('/info/add', (req, res) => {
 	}
 
 	const record = new mongoInstance({
-    name: body.name,
-    number: body.number
-  });
+		name: body.name,
+		number: body.number
+	});
 
-  record.save().then(result => {
-    res.json(result);
-  });
+	record.save().then(result => {
+		res.json(result);
+	});
 });
+
+// ================== PUT REQUESTS ======================
+app.put('/info/update/:id', (req, res, next) => {
+  const body = req.body
+
+  const record = {
+    name: body.name,
+    number: body.number,
+  }
+
+	// We added the optional { new: true } parameter, which will cause our event handler to be called with the new modified document instead of the original.
+  mongoInstance.findByIdAndUpdate(req.params.id, record, { new: true })
+    .then(updatedRecord => {
+      res.json(updatedRecord)
+    })
+    .catch(error => next(error))
+})
 
 // define middleware functions that are only called if no route handles the HTTP request.
 const unknownEndpoint = (request, response) => {
-  response.status(404).send({ error: 'unknown endpoint' })
+	response.status(404).send({ error: 'unknown endpoint' })
 }
 
 app.use(unknownEndpoint);
+
+const errorHandler = (error, request, response, next) => {
+	console.error(error.message)
+
+	if (error.name === 'CastError') {
+		return response.status(400).send({ error: 'malformatted id' })
+	}
+
+	next(error);
+}
+
+// this has to be the last loaded middleware.
+app.use(errorHandler)
 
 app.listen(PORT, () => {
 	console.log(`server is running at port ${PORT}`);
