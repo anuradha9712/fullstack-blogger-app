@@ -1,8 +1,9 @@
 const blogRouter = require('express').Router();
 const blogModel = require('../models/record');
+const logger = require('../utils/logger');
 
 // Send JSON data in response
-blogRouter.get('/person', (req, res) => {
+blogRouter.get('/', (req, res) => {
 	blogModel.find({}).then(result => {
 		res.json(result);
 	});
@@ -30,20 +31,21 @@ blogRouter.delete('/remove/:id', (req, res, next) => {
 // ================= POST REQUESTS ====================
 blogRouter.post('/add', (req, res, next) => {
 	const body = req.body;
-	console.log('body', body);
-	if (!body.name) {
+	logger.info('body', body);
+	if (!body.title) {
 		return res.status(400).json({  // Status code 400:- Bad Request
-			error: 'name missing'
+			error: 'title missing'
 		})
 	}
 
 	const record = new blogModel({
-		name: body.name,
-		number: body.number
+		title: body.title,
+		content: body.content
 	});
 
 	record.save()
 		.then(result => {
+			logger.info('result saved in DB', result);
 			res.json(result)
 		})
 		.catch(error => next(error))
@@ -54,8 +56,8 @@ blogRouter.put('/update/:id', (req, res, next) => {
 	const body = req.body
 
 	const record = {
-		name: body.name,
-		number: body.number,
+		title: body.title,
+		content: body.content,
 	}
 
 	// We added the optional { new: true } parameter, which will cause our event handler to be called with the new modified document instead of the original.

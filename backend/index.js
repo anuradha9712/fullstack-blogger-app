@@ -5,12 +5,15 @@ const PORT = process.env.PORT;
 const logger = require('./utils/logger');
 const blogRouter = require('./controllers/blog');
 const middleware = require('./utils/middleware');
+const cors = require('cors')
+
+app.use(cors());
 
 // it takes the JSON data of a request, transforms it into a JavaScript object 
 // and then attaches it to the body property of the request object before the route handler is called.
 app.use(express.json());
 
-app.use('/blog', blogRouter);
+app.use('/api/blogs', blogRouter);
 
 app.use(middleware.unknownEndpoint);
 app.use(middleware.errorHandler);
