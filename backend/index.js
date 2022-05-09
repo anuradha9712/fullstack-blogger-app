@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const app = express();
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 3001;
 const logger = require('./utils/logger');
 const blogRouter = require('./controllers/blog');
 const middleware = require('./utils/middleware');
