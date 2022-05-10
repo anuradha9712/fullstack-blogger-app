@@ -8,7 +8,6 @@ import {
   Input,
   Textarea,
   Button,
-  Text,
   ChipInput,
   Toast
 } from '@innovaccer/design-system';
