@@ -22,6 +22,12 @@ const Schema = new mongoose.Schema({
     // minlength: 10
   },
   content: String,
+  // tags: [{
+  //   type: String
+  // }]
+  tags:[{
+    type: String,
+ }]
 });
 
 Schema.set('toJSON', {

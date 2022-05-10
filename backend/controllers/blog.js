@@ -40,7 +40,8 @@ blogRouter.post('/add', (req, res, next) => {
 
 	const record = new blogModel({
 		title: body.title,
-		content: body.content
+		content: body.content,
+		tags: body.tag
 	});
 
 	record.save()
