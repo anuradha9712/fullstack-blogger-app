@@ -38,7 +38,7 @@ const GetBlog = () => {
             <Row className="justify-content-center">
               {
                 blogList.map((blog) =>
-                  <Column size={3} className="mt-4 mx-4">
+                  <Column key={blog.id} size={3} className="mt-4 mx-4">
                     <Message
                       description={blog.content}
                       title={blog.title}

@@ -1,24 +1,11 @@
 require('dotenv').config();
-const express = require('express');
-const app = express();
-const PORT = process.env.PORT || 3001;
+const app = require('./app'); // the actual Express application
+const http = require('http');
 const logger = require('./utils/logger');
-const blogRouter = require('./controllers/blog');
-const middleware = require('./utils/middleware');
-const cors = require('cors')
+const PORT = process.env.PORT || 3001;
 
-app.use(cors());
-app.use(express.static('build'));
+const server = http.createServer(app);
 
-// it takes the JSON data of a request, transforms it into a JavaScript object 
-// and then attaches it to the body property of the request object before the route handler is called.
-app.use(express.json());
-
-app.use('/api/blogs', blogRouter);
-
-app.use(middleware.unknownEndpoint);
-app.use(middleware.errorHandler);
-
-app.listen(PORT, () => {
-  logger.info(`server is running at port ${PORT}`);
+server.listen(PORT, () => {
+  logger.info(`Server running on port ${PORT}`)
 });

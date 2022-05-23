@@ -3,33 +3,43 @@ const blogModel = require('../models/record');
 const logger = require('../utils/logger');
 
 // Send JSON data in response
-blogRouter.get('/', (req, res) => {
-	blogModel.find({}).then(result => {
-		res.json(result);
-	});
+blogRouter.get('/', async (req, res) => {
+	const blog = await blogModel.find({})
+	res.json(blog);
 });
 
 // Send information for particular data entry
 // We can define parameters for routes in express by using the colon syntax:
-blogRouter.get('/:id', (req, res, next) => {
+blogRouter.get('/:id', async (req, res, next) => {
 	const id = Number(req.params.id);
-	blogModel.findById(id)
-		.then(result => res.json(result))
-		.catch(error => next(error));
+
+	try {
+		const result = await blogModel.findById(id)
+		if (result) {
+			res.json(result);
+		} else {
+			res.status(404).end();
+		}
+	} catch (exception) {
+		next(exception)
+	}
 });
 
 // ================= DELETE REQUESTS ====================
-blogRouter.delete('/remove/:id', (req, res, next) => {
-	blogModel.findByIdAndRemove(req.params.id)
-		.then(result => {
-			// 204 (No Content): The server has fulfilled the request but does not need to return an entity-body,
-			res.status(204).end()
-		})
-		.catch(error => next(error))
+blogRouter.delete('/remove/:id', async (req, res, next) => {
+	try {
+		await blogModel.findByIdAndRemove(req.params.id);
+
+		// 204 (No Content): The server has fulfilled the request but does not need to return an entity-body,
+		res.status(204).end();
+
+	} catch (exception) {
+		next(exception);
+	}
 });
 
 // ================= POST REQUESTS ====================
-blogRouter.post('/add', (req, res, next) => {
+blogRouter.post('/add', async (req, res, next) => {
 	const body = req.body;
 	logger.info('body', body);
 	if (!body.title) {
@@ -44,29 +54,30 @@ blogRouter.post('/add', (req, res, next) => {
 		tags: body.tag
 	});
 
-	record.save()
-		.then(result => {
-			logger.info('result saved in DB', result);
-			res.json(result)
-		})
-		.catch(error => next(error))
+	try {
+		const savedBlog = await record.save();
+		res.status(201).json(savedBlog);
+	} catch (exception) {
+		next(exception)
+	}
 });
 
 // ================== PUT REQUESTS ======================
-blogRouter.put('/update/:id', (req, res, next) => {
-	const body = req.body
+blogRouter.put('/update/:id', async (req, res, next) => {
+	const body = req.body;
 
 	const record = {
 		title: body.title,
 		content: body.content,
 	}
 
-	// We added the optional { new: true } parameter, which will cause our event handler to be called with the new modified document instead of the original.
-	blogModel.findByIdAndUpdate(req.params.id, record, { new: true })
-		.then(updatedRecord => {
-			res.json(updatedRecord)
-		})
-		.catch(error => next(error))
+	try {
+		// We added the optional { new: true } parameter, which will cause our event handler to be called with the new modified document instead of the original.
+		const result = await blogModel.findByIdAndUpdate(req.params.id, record, { new: true });
+		res.json(result);
+	} catch (exception) {
+		next(exception);
+	}
 });
 
 module.exports = blogRouter;
