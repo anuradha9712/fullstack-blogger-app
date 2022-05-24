@@ -4,13 +4,19 @@ const unknownEndpoint = (request, response) => {
 }
 
 const errorHandler = (error, request, response, next) => {
+	console.log('=============== inside errorhandler', error);
 
-	if (error.name === 'CastError') {
-		return response.status(400).send({ error: 'malformatted id' })
-	} else if (error.name === 'ValidationError') {
-		return response.status(400).json({ error: error.message })
+	switch (error.name) {
+		case 'CastError':
+			return response.status(400).send({ error: 'malformatted id' })
+		case 'ValidationError':
+			return response.status(400).json({ error: error.message })
+		case 'TypeError':
+			return response.status(500).json({ error: error.message })
+		default:
+			next(error);
+			break;
 	}
-	next(error);
 }
 
 module.exports = {

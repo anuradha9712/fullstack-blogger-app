@@ -1,5 +1,6 @@
 const blogRouter = require('express').Router();
 const blogModel = require('../models/record');
+const UserModel = require('../models/user');
 const logger = require('../utils/logger');
 
 // Send JSON data in response
@@ -48,14 +49,22 @@ blogRouter.post('/add', async (req, res, next) => {
 		})
 	}
 
+	const user = await UserModel.findById(body.userId);
+
 	const record = new blogModel({
 		title: body.title,
 		content: body.content,
-		tags: body.tag
+		tags: body.tag,
+		// user: user._id
 	});
 
 	try {
 		const savedBlog = await record.save();
+
+		// Save the blog ID inside User Model
+		// user.blogs = user.blogs.concat(savedBlog._id)
+		// await user.save();
+
 		res.status(201).json(savedBlog);
 	} catch (exception) {
 		next(exception)

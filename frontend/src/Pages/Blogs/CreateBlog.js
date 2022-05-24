@@ -9,9 +9,12 @@ import {
   Textarea,
   Button,
   ChipInput,
-  Toast
+  Toast,
+  Icon,
+  Text
 } from '@innovaccer/design-system';
 import blogService from '../../services/blogs';
+import logo from '../../images/pic1.svg';
 
 const CreateBlog = () => {
 
@@ -28,22 +31,25 @@ const CreateBlog = () => {
     setShowTooltip(true);
     setTimeout(() => {
       setShowTooltip(false);
-    },1000);
+    }, 1000);
   }
 
   return (
     <>
-      {/* <Row className="justify-content-center">
-        <Text
-          size="large"
-          appearance="link"
-          className='justify-content-center m-6'
-        >
-          Every Programmer is an Author!!
-        </Text>
-      </Row> */}
-      <Row className="px-8 justify-content-center">
-        <Column size={6} className="m-6">
+      <Row className="p-8">
+        <Column size={4} className="mx-8">
+          <Icon>
+            <img alt="logo" src={logo} className="w-100" />
+          </Icon>
+          <Text
+            size="large"
+            appearance="link"
+            className='justify-content-center d-flex m-6'
+          >
+            Every Programmer is an Author!!
+          </Text>
+        </Column>
+        <Column size={7} className="m-6 justify-content-center">
           <Card className="px-6 py-6">
             <Heading
               className="mb-7"

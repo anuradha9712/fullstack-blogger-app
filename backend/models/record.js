@@ -1,19 +1,5 @@
 // Mongoose act as an ODM (Object Document Mapper)
 const mongoose = require('mongoose')
-require('dotenv').config()
-const logger = require('../utils/logger');
-
-const url = process.env.MONGODB_URI
-
-logger.info('connecting to', url)
-
-mongoose.connect(url)
-  .then(result => {
-    logger.info('connected to MongoDB')
-  })
-  .catch((error) => {
-    logger.info('error connecting to MongoDB:', error.message)
-  })
 
 const Schema = new mongoose.Schema({
   title: {
@@ -22,12 +8,13 @@ const Schema = new mongoose.Schema({
     // minlength: 10
   },
   content: String,
-  // tags: [{
-  //   type: String
-  // }]
-  tags:[{
+  tags: [{
     type: String,
- }]
+  }],
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }
 });
 
 Schema.set('toJSON', {
