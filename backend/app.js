@@ -1,9 +1,10 @@
 const express = require('express');
 const app = express();
 
-const blogRouter = require('./controllers/blog');
 const userRouter = require('./controllers/user');
+const blogRouter = require('./controllers/blog');
 const middleware = require('./utils/middleware');
+const loginRouter = require('./controllers/login');
 
 const cors = require('cors');
 const mongoose = require('mongoose');
@@ -29,8 +30,9 @@ app.use(express.static('build'));
 // and then attaches it to the body property of the request object before the route handler is called.
 app.use(express.json());
 
-app.use('/api/users', userRouter)
-app.use('/api/blogs', blogRouter);
+app.use('/api/login', loginRouter);
+app.use('/api/users', userRouter);
+app.use('/api/blogs', middleware.tokenExtractor, blogRouter);
 
 app.use(middleware.unknownEndpoint);
 app.use(middleware.errorHandler);

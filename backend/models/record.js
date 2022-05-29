@@ -13,6 +13,7 @@ const Schema = new mongoose.Schema({
   }],
   user: {
     type: mongoose.Schema.Types.ObjectId,
+    // The ref option is what tells Mongoose which model to use during population, 
     ref: 'User'
   }
 });
@@ -25,4 +26,4 @@ Schema.set('toJSON', {
   }
 })
 
-module.exports = mongoose.model('UserRecord', Schema);
+module.exports = mongoose.model('Blog', Schema);
