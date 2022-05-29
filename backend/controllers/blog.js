@@ -29,7 +29,17 @@ blogRouter.get('/:id', async (req, res, next) => {
 // ================= DELETE REQUESTS ====================
 blogRouter.delete('/remove/:id', async (req, res, next) => {
 	try {
-		await blogModel.findByIdAndRemove(req.params.id);
+		const blogID = req.params.id;
+		const blog = await blogModel.findById(blogID);
+
+		const decodedToken = jwt.verify(req.token, process.env.SECRET);
+		if (!decodedToken || !decodedToken.id) {
+			return res.status(401).json({ error: 'token missing or invalid' })
+		} else if (blog.user.toString() !== decodedToken.id.toString()) {
+			return res.status(401).json({ error: 'You don\'t have enough permission to perform this action' })
+		}
+
+		await blogModel.findByIdAndRemove(blogID);
 
 		// 204 (No Content): The server has fulfilled the request but does not need to return an entity-body,
 		res.status(204).end();
@@ -38,6 +48,14 @@ blogRouter.delete('/remove/:id', async (req, res, next) => {
 		next(exception);
 	}
 });
+
+// const getTokenFrom = request => {
+//   const authorization = request.get('authorization');
+//   if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
+//     return authorization.substring(7);
+//   }
+//   return null;
+// }
 
 // ================= POST REQUESTS ====================
 blogRouter.post('/add', async (req, res, next) => {
@@ -49,21 +67,28 @@ blogRouter.post('/add', async (req, res, next) => {
 		})
 	}
 
-	const user = await UserModel.findById(body.userId);
+	// const token = getTokenFrom(req);
+	const decodedToken = jwt.verify(req.token, process.env.SECRET);
+	if (!decodedToken || !decodedToken.id) {
+		return res.status(401).json({ error: 'token missing or invalid' })
+	}
+	const user = await UserModel.findById(decodedToken.id);
+
+	// const user = await UserModel.findById(body.userId);
 
 	const record = new blogModel({
 		title: body.title,
 		content: body.content,
 		tags: body.tag,
-		// user: user._id
+		user: user._id
 	});
 
 	try {
 		const savedBlog = await record.save();
 
 		// Save the blog ID inside User Model
-		// user.blogs = user.blogs.concat(savedBlog._id)
-		// await user.save();
+		user.blogs = user.blogs.concat(savedBlog._id)
+		await user.save();
 
 		res.status(201).json(savedBlog);
 	} catch (exception) {

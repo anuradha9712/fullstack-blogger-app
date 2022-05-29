@@ -7,6 +7,7 @@ const userSchema = new mongoose.Schema({
   blogs: [
     {
       type: mongoose.Schema.Types.ObjectId,
+      // The ref option is what tells Mongoose which model to use during population, 
       ref: 'Blog'
     }
   ],
