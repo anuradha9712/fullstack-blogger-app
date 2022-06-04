@@ -2,6 +2,7 @@ const blogRouter = require('express').Router();
 const blogModel = require('../models/record');
 const UserModel = require('../models/user');
 const logger = require('../utils/logger');
+const jwt = require('jsonwebtoken');
 
 // Send JSON data in response
 blogRouter.get('/', async (req, res) => {
@@ -67,10 +68,14 @@ blogRouter.post('/add', async (req, res, next) => {
 		})
 	}
 
+	if (!req.token) {
+		return res.status(401).json({ error: 'Not authorized to perform this operation' });
+	}
+
 	// const token = getTokenFrom(req);
 	const decodedToken = jwt.verify(req.token, process.env.SECRET);
 	if (!decodedToken || !decodedToken.id) {
-		return res.status(401).json({ error: 'token missing or invalid' })
+		return res.status(401).json({ error: 'token missing or invalid' });
 	}
 	const user = await UserModel.findById(decodedToken.id);
 
