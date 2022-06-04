@@ -11,7 +11,7 @@ usersRouter.get('/', async (request, response) => {
 });
 
 // Create New User
-usersRouter.post('/', async (request, response) => {
+usersRouter.post('/create', async (request, response) => {
   const { username, name, password } = request.body;
 
   const existingUser = await User.findOne({ username })

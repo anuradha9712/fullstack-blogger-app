@@ -3,8 +3,8 @@ const app = express();
 
 const userRouter = require('./controllers/user');
 const blogRouter = require('./controllers/blog');
-const middleware = require('./utils/middleware');
 const loginRouter = require('./controllers/login');
+const middleware = require('./utils/middleware');
 
 const cors = require('cors');
 const mongoose = require('mongoose');
