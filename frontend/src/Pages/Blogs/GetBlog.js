@@ -12,6 +12,7 @@ import {
 import emptyState from '../../images/emptyState.svg';
 import blogService from '../../services/blogs';
 import './blog.css';
+import Layout from '../../components/Layout';
 
 const ShowNoResult = () => {
   return (
@@ -33,7 +34,7 @@ const ShowBlogList = ({ blogList, onDeleteHandler }) => {
   }
 
   return (
-    <div className='d-flex flex-wrap'>
+    <div>
       {
         blogList.map(({ id, title, content, tags }) => {
           return (
@@ -49,7 +50,7 @@ const ShowBlogList = ({ blogList, onDeleteHandler }) => {
                     {content}
                   </div>
                   <div>
-                    {tags.map((tag) => <Badge className='m-2' appearance={tagMapper[tag]}>{tag}</Badge>)}
+                    {tags.map((tag, key) => <Badge key={key} className='m-2' appearance={tagMapper[tag]}>{tag}</Badge>)}
                   </div>
                 </CardBody>
                 <CardSubdued border="top">
@@ -84,14 +85,16 @@ const GetBlog = () => {
 
   return (
     <>
-      <div className="p-7 m-6">
-        {
-          blogList && blogList.length === 0 ?
-            <ShowNoResult />
-            :
-            <ShowBlogList blogList={blogList} onDeleteHandler={handleDelete} />
+      <Layout>
+        <div className="m-6">
+          {
+            blogList && blogList.length === 0 ?
+              <ShowNoResult />
+              :
+              <ShowBlogList blogList={blogList} onDeleteHandler={handleDelete} />
           }
-      </div>
+        </div>
+      </Layout>
     </>
   )
 }
