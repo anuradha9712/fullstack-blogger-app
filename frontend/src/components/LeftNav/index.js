@@ -9,11 +9,16 @@ const LeftNav = () => {
     // return isActive ? `bg-dark` : `bg-primary`;
   };
 
+  const handleLogout = () => {
+    console.log('logout called');
+    localStorage.removeItem('userDetails');
+  }
+
   const navList = [
     { name: 'My Feed', icon: 'books', path: '/home' },
-    { name: 'Profile', icon: 'person', path: '/home' },
     { name: 'Create', icon: 'create', path: '/create' },
-    { name: 'Login', icon: 'login', path: '/login' },
+    { name: 'Profile', icon: 'person', path: '/home' },
+    { name: 'Logout', icon: 'login', path: '/login', onClick: handleLogout },
   ];
 
   const tagList = [
@@ -34,6 +39,7 @@ const LeftNav = () => {
               key={key}
               to={nav.path}
               className='p-4'
+              onClick={nav.onClick}
             >
               <div className='Row align-items-center'>
                 <Icon type='outlined' size={20} appearance='inverse' name={nav.icon} className='mr-5'></Icon>

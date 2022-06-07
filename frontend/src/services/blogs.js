@@ -8,7 +8,11 @@ const getAll = () => {
 }
 
 const remove = (id) => {
-  const request = axios.delete(`${baseUrl}/remove/${id}`)
+  const userDetails = JSON.parse(localStorage.getItem('userDetails'));
+  const config = {
+    headers: { Authorization: `bearer ${userDetails?.token}` },
+  }
+  const request = axios.delete(`${baseUrl}/remove/${id}`, config)
   return request.then(response => response.data);
 }
 

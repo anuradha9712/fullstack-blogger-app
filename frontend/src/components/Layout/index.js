@@ -1,6 +1,7 @@
 import React from 'react';
 import { Row, Column } from '@innovaccer/design-system';
 import LeftNav from '../LeftNav';
+import Sidebar from '../Sidebar';
 import './index.css';
 
 const Layout = ({ children }) => {
@@ -15,7 +16,7 @@ const Layout = ({ children }) => {
       </Column>
 
       <Column size={3}>
-        <h1>sidebar here</h1>
+        <Sidebar />
       </Column>
     </Row>
   )

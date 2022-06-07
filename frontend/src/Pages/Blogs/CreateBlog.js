@@ -7,7 +7,6 @@ import {
   Textarea,
   Button,
   ChipInput,
-  Text
 } from '@innovaccer/design-system';
 import blogService from '../../services/blogs';
 import Layout from '../../components/Layout';
