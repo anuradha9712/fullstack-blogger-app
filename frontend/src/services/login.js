@@ -3,8 +3,12 @@ import axios from 'axios';
 const baseUrl = '/api/login';
 
 const create = async newObject => {
-  const response = await axios.post(`${baseUrl}/`, newObject);
-  return response.data;
+  try {
+    const response = await axios.post(`${baseUrl}/`, newObject);
+    return response;
+  } catch (err) {
+    return err;
+  }
 }
 
 const loginServices = { create }

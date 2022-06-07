@@ -13,8 +13,16 @@ const remove = (id) => {
 }
 
 const create = async newObject => {
-  const response = await axios.post(`${baseUrl}/add`, newObject);
-  return response.data;
+  const userDetails = JSON.parse(localStorage.getItem('userDetails'));
+  const config = {
+    headers: { Authorization: `bearer ${userDetails?.token}` },
+  }
+  try {
+    const response = await axios.post(`${baseUrl}/add`, newObject, config);
+    return response;
+  } catch (exception) {
+    return exception;
+  }
 }
 
 const update = async (id, newObject) => {

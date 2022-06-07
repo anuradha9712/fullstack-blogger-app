@@ -1,0 +1,5 @@
+.main-container {
+  height: 100vh;
+  box-shadow: inset 5px 0 5px -5px var(--secondary), inset -5px 0 5px -5px var(--secondary);
+  overflow-y: scroll;
+}

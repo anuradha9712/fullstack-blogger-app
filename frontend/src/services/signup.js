@@ -8,8 +8,12 @@ const getAll = () => {
 }
 
 const create = async newObject => {
-  const response = await axios.post(`${baseUrl}/create`, newObject);
-  return response.data;
+  try {
+    const response = await axios.post(`${baseUrl}/create`, newObject);
+    return response;
+  } catch (exception) {
+    return exception;
+  }
 }
 
 const userServices = { getAll, create }
