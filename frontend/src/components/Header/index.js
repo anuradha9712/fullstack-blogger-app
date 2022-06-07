@@ -5,8 +5,8 @@ const Header = () => {
 
   return (
     <div className='position-sticky d-flex bg-light mainHeader p-6'>
-      <div className='d-flex justify-content-start'>logo</div>
-      <div className='d-flex justify-content-end'>logout</div>
+      <div className='d-flex justify-content-start'>Test App</div>
+      {/* <div className='d-flex justify-content-end'>logout</div> */}
     </div>
   )
 }
