@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import {
-  Column,
-  Row,
   Card,
   Heading,
   Label,
@@ -9,26 +7,30 @@ import {
   Textarea,
   Button,
   ChipInput,
-  Toast,
-  Icon,
   Text
 } from '@innovaccer/design-system';
 import blogService from '../../services/blogs';
-import logo from '../../images/pic1.svg';
 import Layout from '../../components/Layout';
+import Notification from '../../components/Notification';
 
 const CreateBlog = () => {
 
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [showTooltip, setShowTooltip] = useState(false);
+  const [message, setMessage] = useState('');
   const [tag, setTag] = React.useState(
     ['Web Development', 'Beginners', 'Full Stack']
   );
 
   const handleSubmit = async () => {
     const newBlog = { title, content, tag }
-    await blogService.create(newBlog);
+    const result = await blogService.create(newBlog);
+    if (result?.data) {
+      setMessage('Blog Successfully Created!!');
+    } else {
+      setMessage('Some Error Occurred!!');
+    }
     setShowTooltip(true);
     setTimeout(() => {
       setShowTooltip(false);
@@ -38,21 +40,16 @@ const CreateBlog = () => {
   return (
     <>
       <Layout>
-        <Row className="p-8">
-          {/* <Column className="mx-8">
-            <Icon>
-              <img alt="logo" src={logo} className="w-100" />
-            </Icon>
-            <Text
-              size="large"
-              appearance="link"
-              className='justify-content-center d-flex m-6'
-            >
-              Every Programmer is an Author!!
-            </Text>
-          </Column> */}
-          <Column className="m-6 justify-content-center">
-            <Card className="px-6 py-6">
+        <div>
+          {/* <Text
+            size="large"
+            appearance="link"
+            className='justify-content-center d-flex m-6'
+          >
+            Write Some Cool Stuffs Here!!
+          </Text> */}
+          <div className='d-flex justify-content-center m-6'>
+            <Card className="p-6">
               <Heading
                 className="mb-7"
                 size="m"
@@ -75,7 +72,7 @@ const CreateBlog = () => {
                 value={tag}
                 chipOptions={{ clearButton: true }}
                 onChange={setTag}
-                className="p-2 mb-6"
+                className="p-4 mb-6"
               />
 
               <Label withInput={true}>Content</Label>
@@ -85,7 +82,7 @@ const CreateBlog = () => {
                 placeholder="Write your content here..."
                 onChange={(e) => setContent(e.target.value)}
                 resize={true}
-                rows={3}
+                rows={5}
               />
 
               <Button
@@ -97,14 +94,9 @@ const CreateBlog = () => {
                 Create Blog
               </Button>
             </Card>
-          </Column>
-        </Row>
-
-        {showTooltip &&
-          <div className="m-8">
-            <Toast appearance="info" title="Blog Successfully Created!!" />
           </div>
-        }
+          {showTooltip && <Notification message={message} />}
+        </div>
       </Layout>
     </>
   )

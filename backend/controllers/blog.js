@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 
 // Send JSON data in response
 blogRouter.get('/', async (req, res) => {
-	const blog = await blogModel.find({})
+	const blog = await blogModel.find({}).populate('user');
 	res.json(blog);
 });
 
@@ -61,7 +61,7 @@ blogRouter.delete('/remove/:id', async (req, res, next) => {
 // ================= POST REQUESTS ====================
 blogRouter.post('/add', async (req, res, next) => {
 	const body = req.body;
-	logger.info('body', body);
+	logger.info('body', body, 'token', req.token);
 	if (!body.title) {
 		return res.status(400).json({  // Status code 400:- Bad Request
 			error: 'title missing'
@@ -73,7 +73,13 @@ blogRouter.post('/add', async (req, res, next) => {
 	}
 
 	// const token = getTokenFrom(req);
-	const decodedToken = jwt.verify(req.token, process.env.SECRET);
+	let decodedToken;
+	try {
+		decodedToken = jwt.verify(req.token, process.env.SECRET);
+	} catch (exception) {
+		next(exception)
+	}
+	// const decodedToken = jwt.verify(req.token, process.env.SECRET);
 	if (!decodedToken || !decodedToken.id) {
 		return res.status(401).json({ error: 'token missing or invalid' });
 	}

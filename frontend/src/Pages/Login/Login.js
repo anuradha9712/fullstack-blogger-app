@@ -27,7 +27,7 @@ const Login = () => {
     const result = await loginServices.create(newUser);
     if (result?.data) {
 
-      localStorage.setItem('userDetails', result);
+      localStorage.setItem('userDetails', JSON.stringify(result.data));
       navigate('/home');
 
     } else {

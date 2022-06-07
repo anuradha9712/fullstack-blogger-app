@@ -1,24 +1,23 @@
 import React from 'react';
 import { Row, Column } from '@innovaccer/design-system';
 import LeftNav from '../LeftNav';
+import './index.css';
 
-const Layout = ({children}) => {
+const Layout = ({ children }) => {
   return (
-    <div>
-      <Row>
-        <Column size={2}>
-          <LeftNav />
-        </Column>
+    <Row className='h-100'>
+      <Column size={3}>
+        <LeftNav />
+      </Column>
 
-        <Column size={6}>
-          {children}
-        </Column>
+      <Column size={6} className='border-left border-right main-container'>
+        {children}
+      </Column>
 
-        <Column size={3}>
-          <h1>sidebar here</h1>
-        </Column>
-      </Row>
-    </div>
+      <Column size={3}>
+        <h1>sidebar here</h1>
+      </Column>
+    </Row>
   )
 }
 

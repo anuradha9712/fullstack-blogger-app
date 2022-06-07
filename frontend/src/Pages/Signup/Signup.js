@@ -92,11 +92,11 @@ const Signup = () => {
                 onChange={(e) => setPassword(e.target.value)}
               />
 
-              <Label withInput={true} className='mb-5'>Re-Enter Password</Label>
+              <Label withInput={true} className='mb-5'>Confirm Password</Label>
               <Input
                 name="input"
                 type="password"
-                placeholder="Enter Password"
+                placeholder="Confirm Password"
                 className="mb-6"
                 autoComplete="off"
                 value={confirmPassword}

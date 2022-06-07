@@ -8,11 +8,6 @@ import {
   CardSubdued,
   Text,
   Badge,
-  Avatar,
-  Divider,
-  Row,
-  Paragraph,
-  Column
 } from '@innovaccer/design-system';
 import emptyState from '../../images/emptyState.svg';
 import blogService from '../../services/blogs';
@@ -23,7 +18,7 @@ const ShowNoResult = () => {
     <EmptyState
       description="Write some cool stuffs here!!"
       imageSrc={emptyState}
-      size='large'
+      size="small"
       title="No blog Published."
     />
   )
@@ -32,33 +27,17 @@ const ShowNoResult = () => {
 const ShowBlogList = ({ blogList, onDeleteHandler }) => {
 
   const tagMapper = {
-    'Web Development': 'warning',
+    'Web Development': 'primary',
     'Beginners': 'accent2',
-    'Full Stack': 'success',
-    'Javascript': 'accent1',
-    'React': 'accent3',
-    'Programming': 'accent4'
+    'Full Stack': 'success'
   }
 
   return (
     <div>
       {
-        blogList.map(({ id, title, content, tags, user }) => {
+        blogList.map(({ id, title, content, tags }) => {
           return (
             <div key={id}>
-              {/* <Card className='m-5'>
-                <CardHeader>
-                  
-                  <div className='d-flex'>
-                    <Avatar className='mr-5'>{user.name}</Avatar>
-                    <div className='flex-column'>
-                      <Text>{user.name}</Text>
-                      <Paragraph appearance='subtle'>{user.username}</Paragraph>
-                    </div>
-                  </div>
-                  <Divider className='my-5' />
-                </CardHeader>
-              </Card> */}
               <Card className="m-5">
                 <CardHeader>
                   <Text size="large" weight="strong">
@@ -70,7 +49,7 @@ const ShowBlogList = ({ blogList, onDeleteHandler }) => {
                     {content}
                   </div>
                   <div>
-                    {tags.map((tag, key) => <Badge key={key} className='m-2' subtle={true} appearance={tagMapper[tag]}>{tag}</Badge>)}
+                    {tags.map((tag, key) => <Badge key={key} className='m-2' appearance={tagMapper[tag]}>{tag}</Badge>)}
                   </div>
                 </CardBody>
                 <CardSubdued border="top">
