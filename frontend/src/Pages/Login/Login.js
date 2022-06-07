@@ -13,7 +13,7 @@ import {
 import loginServices from '../../services/login';
 import Notification from '../../components/Notification';
 import { useNavigate } from "react-router-dom";
-import logo from '../../images/signup.svg';
+import logo from '../../images/login.svg';
 
 const Login = () => {
   const [username, setUsername] = useState('');
