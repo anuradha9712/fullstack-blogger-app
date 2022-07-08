@@ -54,11 +54,11 @@ const Login = () => {
   return (
     <>
       <Row className='p-8'>
-        {/* <Column className='d-flex align-items-center justify-content-center'>
+        <Column className='d-flex align-items-center justify-content-center'>
           <Icon>
             <img alt="logo" src={logo} className="w-100" />
           </Icon>
-        </Column> */}
+        </Column>
         <Column className='d-flex align-items-center justify-content-center'>
           <div>
             <Card className="p-8 w-100">
