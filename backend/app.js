@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const app = express();
 
 const userRouter = require('./controllers/user');
@@ -33,6 +34,10 @@ app.use(express.json());
 app.use('/api/login', loginRouter);
 app.use('/api/users', userRouter);
 app.use('/api/blogs', middleware.tokenExtractor, blogRouter);
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '/build/index.html'));
+});
 
 app.use(middleware.unknownEndpoint);
 app.use(middleware.errorHandler);
